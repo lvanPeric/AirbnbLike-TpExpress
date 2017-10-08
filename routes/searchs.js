@@ -7,7 +7,7 @@ router.get('/:name', function(req, res) {
     var db = fs.readFile("db.json", 'utf8',function (err, db) {
     	var database = JSON.parse(db);
 		var country = _.filter(database.places, function(x){
-		return x.countryCode == req.params.name;
+		return x.country == req.params.name;
 		});
 	res.json(country);
 	console.log(country);

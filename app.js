@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/chat', chatting);
+app.use('/chatting', chatting);
 app.use('/booking', booking);
 app.use('/searchs', searchs);
 app.use('/contact', contact);
