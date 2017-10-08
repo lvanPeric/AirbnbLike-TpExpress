@@ -49,6 +49,8 @@ router.post('/create', function(req, res, next) {
 			mailsend(email, 'Compte créé', 'Bienvenue', '<h1>Bienvenue</h1><p>'+ username +', votre compte à été créé. </p><br><b>ID : '+IDuser+'</b>');
 			res.json({added : newUser})
 		});
+	}
+});
 
 router.patch('/update/:id', function (req, res, next) {
     var username = req.body.username,
@@ -69,7 +71,7 @@ router.patch('/update/:id', function (req, res, next) {
 			res.status(404).send({error: 404,message:'Utilisateur ' + IDuser + ' est introuvable'});
 		}
 	}
-
 });
+
 
 module.exports = router;
