@@ -6,11 +6,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
+
 var users = require('./routes/users');
 var chatting = require('./routes/chatting');
 var booking = require('./routes/booking');
 var searchs = require('./routes/searchs');
-
+var contact = require('./routes/contact');
+var login = require('./routes/login');
+ 
 var app = express();
 
 // view engine setup
@@ -30,7 +33,9 @@ app.use('/users', users);
 app.use('/chat', chatting);
 app.use('/booking', booking);
 app.use('/searchs', searchs);
-
+app.use('/contact', contact);
+app.use('/login', login);
+ 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
