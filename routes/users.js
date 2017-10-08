@@ -1,45 +1,74 @@
 var fs = require('fs');
 var express = require('express');
 var router = express.Router();
+var bcrypt = require('bcrypt');
+var _ = require('lodash');
+var nodemailer = require('nodemailer');
+var mailsend = require('../module/email');
 
-
-var obj = JSON.parse(fs.readFileSync('db.json', 'utf8'));
+var database = 'db.json';
+var db = require('../db.json');
 
 router.get('/', function(req, res, next) {
-    res.status(400).json({"error" : "Bad paramters"});
+    res.status(406).send({error: 406, message : 'Mauvais identifiant'});
 });
-/* GET users listing. */
-router.get('/:id', function(req, res, next) {
-  var id = req.body.id;
-  if (!id) {
-    res.status(400).json({"error" : "Bad paramters"});
+
+
+router.get('/id/:id', function(req, res, next) {
+ var IDuser = req.params.id;
+ if (!IDuser) {
+  res.status(406).send({error: 406, message : 'Mauvais identifiant'});
+ } else {
+  var filter = _.findIndex(db.users, {id: parseInt(IDuser)});
+  if (filter >= 0) {
+   res.json(db.users[filter])
   } else {
-    var user = obj.users.id;
-    if (!user) res.status(404).json({"error" : "User id not found"});
-    else res.json({'user' : user});
+   res.status(404).send({error: 404, message : 'Utilisateur ' + IDuser + ' est introuvable'});
   }
+ }
 });
 
-router.post('/', function(req, res, next) {
-    var username = req.body.username;
-    var password = req.body.password;
+router.post('/create', function(req, res, next) {
+    var username = req.body.username,
+     password = req.body.password,
+  email = req.body.email;
+    if (!username || !password || !email) {
+        res.status(406).send({error: 406, message : 'Il manque une information'})
+    } else {
 
-    fs.readFile('db.json', 'utf8', function readFileCallback(err, data){
-        if (err){
-            throw err
-        } else {
-            obj = JSON.parse(data); //now it an object
-            obj.users.push({id: 1, username: username, password: password}); //add some data
-            var json = JSON.stringify(obj); //convert it back to json
-            fs.writeFile('db.json', json, 'utf8'); // write it back
-        }
-    });
-    res.json('end')
+//Cryptage du mot de passe
+  var hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+
+  //Ecriture du json
+  var IDuser = !db.users.length > 0 ? 0 : db.users[db.users.length-1].id + 1;
+  var newUser = {id: IDuser, username: username, email: email, password: hash};
+  db.users.push(newUser);
+  fs.writeFile(database, JSON.stringify(db), 'utf8', function () {
+   mailsend(email, 'Compte créé', 'Bienvenue', '<h1>Bienvenue</h1><p>'+ username +', votre compte à été créé. </p><br><b>ID : '+IDuser+'</b>');
+   res.json({added : newUser})
+  });
+    }
 });
 
-router.put('/updates', function (req, res, next) {
-
-  res.send('put');
+router.patch('/update/:id', function (req, res, next) {
+    var username = req.body.username,
+     password = req.body.password,
+  email = req.body.email,
+     IDuser = req.params.id;
+ if (!username || !password) {
+  res.status(406).send({error:406,message:'Mauvais identifiant'})
+ } else {
+  var passwordhash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  var filter = _.findIndex(db.users, {id: parseInt(IDuser)});
+  if (filter >= 0) {
+   db.users[filter] = {id: parseInt(IDuser), username: username, email: email, password: passwordhash};
+   fs.writeFile(database, JSON.stringify(db), 'utf8', function () {
+    res.json({updated : db.users[filter]});
+   });
+  } else {
+   res.status(404).send({error: 404,message:'Utilisateur ' + IDuser + ' est introuvable'});
+  }
+ }
 });
 
 module.exports = router;
