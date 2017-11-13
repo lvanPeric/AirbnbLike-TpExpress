@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  h1= title
+  form(method='POST' action='/places/create')
+          div
+            label(for='type') Type:
+            input#type(type='text', placeholder='Maison ou Appartement' name='type')
+          div
+            label(for='ad') Annonce:
+            input#ad(type='text', placeholder='Annonce' name='ad')
+          div
+            label(for='description') Description:
+            input#description(type='text', placeholder='Description' name='description')
+            div
+            label(for='locationAddress') Adresse de la location:
+            input#locationAddress(type='text', placeholder='Ex : 1 Rue Machin' name='locationAddress')
+            div
+            label(for='locationPostalCode') Code Postal:
+            input#locationPostalCode(type='text', placeholder='Ex : 75020' name='locationPostalCode')
+            div
+            label(for='locationCity') Ville:
+            input#locationCity(type='text', placeholder='Ex : Paris' name='locationCity')
+            div
+            label(for='locationCountry') Pays:
+            input#locationCountry(type='text', placeholder='Ex : France' name='locationCountry')
+            div
+            label(for='pricePerDay') Prix /j:
+            input#pricePerDay(type='text', placeholder='Ex : 75€' name='pricePerDay')
+          div
+            label(for='contactEmail') Mail du loueur:
+            input#contactEmail(type='text' name='contactEmail')
+          button(type='submit') Ajouter Annonce

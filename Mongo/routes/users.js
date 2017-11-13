@@ -1,14 +1,18 @@
 var express = require('express');
 var router = express.Router();
-var users = require('../models/User');
+var User = require('../models/User');
 
 var users = require('../controllers/Users');
 
+router.get('/inscription', function(req, res){
+    res.render('user');
+});
+
 router.post('/create', users.create);
 
-router.put('/update', users.update);
+router.put('/update/:id', users.update);
 
-router.put('/delete', users.delete);
+router.delete('/delete/:id', users.delete);
 
 
 module.exports = router;

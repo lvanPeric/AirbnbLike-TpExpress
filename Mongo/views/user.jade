@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title
+  form(method='POST' action='/users/create')
+          div
+            label(for='firstname') Prénom:
+            input#firstname(type='text', placeholder='Prénom' name='firstname')
+          div
+            label(for='lastname') Nom:
+            input#lastname(type='text', placeholder='Nom' name='lastname')
+          div
+            label(for='email') Email:
+            input#email(type='email', placeholder='email@email.fr' name='email')
+          div
+            label(for='password') Password:
+            input#password(type='password' name='password')
+          button(type='submit') S'inscrire
