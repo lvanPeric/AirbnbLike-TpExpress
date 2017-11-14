@@ -36,10 +36,12 @@ var Chats = {
             message_text: req.body.message_text,
             message_date: req.body.message_date
         });
+
+        console.log(chat.subject);
         if (!chat.subject) {
             res.status(406).send({ error: 406, message: 'Sujet non renseigné' })
         } else {
-            var roomID = !channels.length > 0 ? 0 : channels[channels.length - 1].id + 1;
+            var roomID = !channels.length > 0 ? 0 : channels[channels.length - 1].channel_id + 1;
             chat.save(function (err) {
                 if (!err) {
                     console.log('Utilisateur enregistré');

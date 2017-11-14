@@ -8,28 +8,30 @@ var Bookings = {
         Booking.find({}, function (err, bookings) {
             if (err) throw err;
 
-            // object of all the users
             console.log(bookings);
             res.render('bookings/index', { "bookings": bookings });
         });
     },
     create: function (req, res) {
-        //console.log(req.body, req);
         var booking = new Booking({
             bookingDate: req.body.bookingDate,
-            totalPrice: req.body.totalPrice,
-            user_id: req.body.user_id,
-            place_id: req.body.place_id
+            bookingDateEnd: req.body.bookingDateEnd,
+            totalPrice: req.body.totalPrice
+            
         });
-        booking.save(function (err) {
-            if (err) {
-                throw err;
-            }
-            console.log('La réservation a été effectuée!');
-            console.log(booking);
-        });
-        //res.json(u);
-        res.redirect('Connexion');
+        if (!booking.bookingDate) {
+            res.status(406).send({ error: 406, message: 'Il manque une information' })
+        } else {
+            booking.save(function (err) {
+                if (err) {
+                    throw err;
+                } else { 
+                    res.send(booking);
+                    
+                } 
+
+                });
+        }
     },
 
 
@@ -37,10 +39,6 @@ var Bookings = {
         Booking.findById(req.params.id, function (err, booking) {
             if (err) throw err;
 
-            // change the users location
-            booking.name = req.body;
-
-            // save the booking
             booking.save(function (err) {
                 if (err) throw err;
                 console.log('La réservation a été modifiée');

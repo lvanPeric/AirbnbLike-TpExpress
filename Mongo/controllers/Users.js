@@ -64,7 +64,7 @@ var Users = {
     update: function (req, res) {
 
         var email = req.body.email,
-        password = req.body.password;
+            password = req.body.password;
         
         console.log(req.body);
 
@@ -113,7 +113,41 @@ var Users = {
             });
         });
 
-    }
+    },
+    connect : function(req, res){
+        
+                connect = {
+                    email : req.query.email,
+                    password : req.query.password
+                    };
+                console.log('--------Informations rentrées LogIn--------');
+                console.log('infos rentrées : ');
+                console.log('email : ' + connect.email);
+                console.log('password : ' + connect.password);
+        
+            /*-----VERIFICATION EXISTENCE EMAIL DANS BDD-----*/
+        
+                User.findOne({ 'email' : req.body.email, 'pwd' : req.body.password}, function(err, userStock){
+                    if (!userStock) {
+                        console.log('Veuillez vous inscrire');
+                        res.render('users/inscription');
+                    }
+                    
+                    else{
+                        var password = req.body.pwd;
+                        var adminPass = userStock.pwd; 
+                        if (password == adminPass) {
+                            req.session.email = userStock.email;
+                        };
+                        res.redirect('Pictures');
+                    };
+                });
+        
+            },
+        
+            disconnect : function(req, res){
+                session.destroy();
+            }
 
 };
 

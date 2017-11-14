@@ -52,7 +52,7 @@ app.use(function(err, req, res, next) {
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://admin:admin@airbnblike-shard-00-00-4favo.mongodb.net:27017,airbnblike-shard-00-01-4favo.mongodb.net:27017,airbnblike-shard-00-02-4favo.mongodb.net:27017/test?ssl=true&replicaSet=AirBnbLike-shard-0&authSource=admin', function(err) {
+mongoose.connect('mongodb://admin:admin@airbnblike-shard-00-00-4favo.mongodb.net:27017,airbnblike-shard-00-01-4favo.mongodb.net:27017,airbnblike-shard-00-02-4favo.mongodb.net:27017/airbnb?ssl=true&replicaSet=AirBnbLike-shard-0&authSource=admin', function(err) {
   if (err) { throw err; }
 });
 
