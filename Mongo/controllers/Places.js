@@ -8,14 +8,14 @@ var Places = {
         Place.find({}, function (err, places) {
             if (err) throw err;
 
-            // object of all the users
+        
             console.log(places);
             res.render('places/index', { "places": places });
         });
     },
 
     create: function (req, res) {
-        var place = new User({
+        var place = new Place({
             type: req.body.type,
             ad: req.body.ad,
             description: req.body.description,
