@@ -2,7 +2,6 @@ var mongoose = require('mongoose'),
 bcrypt = require('bcrypt'),
 Schema = mongoose.Schema;
 
-
 var schema = new Schema({
 firstname: {type: String, required: true},
 lastname: {type: String, required: true},
@@ -17,8 +16,6 @@ userPostalCode: {type: Number},
 userCountry: {type: String},
 phoneNumber: {type: Number}
 });
-
-
 
 var User = module.exports = mongoose.model('User', schema, 'users');
 
