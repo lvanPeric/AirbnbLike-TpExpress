@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 require('../models/Chat');
 
 var mongoose = require('mongoose'),
@@ -19,7 +21,7 @@ var Chats = {
         if (mapped.length > 0) {
             res.json(mapped);
         } else {
-            res.status(404).send({error:404, message : 'Aucune chambre disponible'});
+            res.status(404).send({ error: 404, message: 'Aucune chambre disponible' });
         }
     },
 
@@ -34,10 +36,10 @@ var Chats = {
             message_text: req.body.message_text,
             message_date: req.body.message_date
         });
-        if (!subject) {
+        if (!chat.subject) {
             res.status(406).send({ error: 406, message: 'Sujet non renseigné' })
         } else {
-            var roomID = !channels.length > 0 ? 0 : channels[channels.length - 1].channel_id + 1;
+            var roomID = !channels.length > 0 ? 0 : channels[channels.length - 1].id + 1;
             chat.save(function (err) {
                 if (!err) {
                     console.log('Utilisateur enregistré');
@@ -47,6 +49,41 @@ var Chats = {
                     throw err;
                 }
             });
+        }
+    },
+
+    createMessage: function (req, res, next) {
+        var chat = new Chat({
+            channels: req.body.channels,
+            channel_id: req.body.channel_id,
+            subject: req.body.subject,
+            message: req.body.message,
+            message_id: req.body.message_id,
+            user_id: req.body.user_id,
+            message_text: req.body.message_text,
+            message_date: req.body.message_date
+        });
+        if (!messageText) {
+            res.status(406).send({error: 406, message: 'Il manque le message'})
+        } else {
+            var filter = _.findIndex(channels, {channel_id: parseInt(room)});
+            var filterUser = _.findIndex(users, {id: parseInt(user)});
+    
+            var error = '';
+            if (filter < 0) error += '(chat room) ';
+            if (filterUser < 0) error += '(user) ';
+            if(error != ''){
+                res.status(404).send({error:404, message: error + 'introuvable'});
+            } else {
+                var messageID = !channels[filter].message.length > 0 ? 0 : channels[filter].message[channels[filter].message.length - 1].id + 1;
+                // insertion message
+                channels[filter].message.push({
+                    id: messageID,
+                    user: users[filterUser].id,
+                    text: message,
+                    date: new Date().toISOString()
+                });
+            }
         }
     },
 
@@ -65,4 +102,4 @@ var Chats = {
 
 };
 
-module.exports = Users;
+module.exports = Chats;

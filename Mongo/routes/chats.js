@@ -12,6 +12,8 @@ router.get('/rooms', chats.rooms);
 
 router.post('/create', chats.create);
 
+router.post('/messages/create', chats.createMessage);
+
 router.delete('/delete/:channels_id', chats.delete);
 
 
